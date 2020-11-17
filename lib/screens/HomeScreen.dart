@@ -22,28 +22,53 @@ class HomeScreen extends StatelessWidget {
             () => ListView.separated(
               itemBuilder: (context, index) {
                 var todo = todoController.todos[index];
-                return ListTile(
-                  title: Text(
-                    todo.text,
-                    style: todo.done
-                        ? TextStyle(
-                            color: Colors.red,
-                            decoration: TextDecoration.lineThrough,
-                          )
-                        : TextStyle(color: Get.theme.textTheme.bodyText1.color),
-                  ),
-                  onTap: () {
-                    Get.to(TodoScreen(index: index));
+                return Dismissible(
+                  key: UniqueKey(),
+                  onDismissed: (_direction) {
+                    var removed = todo;
+                    todoController.todos.removeAt(index);
+                    Get.snackbar(
+                      'Task removed',
+                      'The task ${removed.text} was removed.',
+                      mainButton: FlatButton(
+                        child: Text('Undo'),
+                        onPressed: () {
+                          if (removed.isNull) {
+                            return;
+                          }
+                          todoController.todos.insert(index, removed);
+                          removed = null;
+                          if (Get.isSnackbarOpen) {
+                            Get.back();
+                          }
+                        },
+                      ),
+                    );
                   },
-                  leading: Checkbox(
-                    value: todo.done,
-                    onChanged: (value) {
-                      todo.done = value;
-                      // notify controller!
-                      todoController.todos[index] = todo;
+                  child: ListTile(
+                    title: Text(
+                      todo.text,
+                      style: todo.done
+                          ? TextStyle(
+                              color: Colors.red,
+                              decoration: TextDecoration.lineThrough,
+                            )
+                          : TextStyle(
+                              color: Get.theme.textTheme.bodyText1.color),
+                    ),
+                    onTap: () {
+                      Get.to(TodoScreen(index: index));
                     },
+                    leading: Checkbox(
+                      value: todo.done,
+                      onChanged: (value) {
+                        todo.done = value;
+                        // notify controller!
+                        todoController.todos[index] = todo;
+                      },
+                    ),
+                    trailing: Icon(Icons.chevron_right),
                   ),
-                  trailing: Icon(Icons.chevron_right),
                 );
               },
               separatorBuilder: (context, index) => Divider(),
