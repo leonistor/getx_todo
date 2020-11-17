@@ -8,6 +8,6 @@ No `ios` and `android` folders. Use `flutter create .`.
 
 ## screenshots
 
-![HomeScreen](screenshots/homescreen.png)
-![Edit](screenshots/edit.png)
-![Delete with undo](screenshots/delete_undo.png)
+![HomeScreen](screenshots/homescreen.png | width=240)
+![Edit](screenshots/edit.png | width=240)
+![Delete with undo](screenshots/delete_undo.png | width=240)
